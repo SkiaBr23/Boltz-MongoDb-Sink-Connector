@@ -62,7 +62,7 @@ public class MongoDbWriterTest {
         partDoc.put("offset", new Long(999L).longValue());
 
         when(iterator.next()).thenReturn(partDoc);
-        when(wrapper.getDocuments("OFFSETS")).thenReturn(iterable);
+        when(wrapper.getDocuments(MongoDbWriter.OFFSET_COLLECTION)).thenReturn(iterable);
 
         BlockingQueue<SinkRecord> buffer = new LinkedBlockingQueue<>();
 
@@ -108,7 +108,7 @@ public class MongoDbWriterTest {
         verify(wrapper).store("mytopic", new Document("mykey", "2"));
         verify(wrapper).store("mytopic", new Document("mykey", "hi"));
         partDoc.put("offset", 1001L);
-        verify(wrapper).store("OFFSETS", partDoc);
+        verify(wrapper).store(MongoDbWriter.OFFSET_COLLECTION, partDoc);
 
         writer.close();
         writerThread.interrupt();

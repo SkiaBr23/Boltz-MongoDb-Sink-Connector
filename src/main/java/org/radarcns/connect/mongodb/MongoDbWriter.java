@@ -58,6 +58,7 @@ public class MongoDbWriter implements Closeable, Runnable {
     private final RecordConverterFactory converterFactory;
     private final Monitor monitor;
     private Throwable exception;
+    public static final String OFFSET_COLLECTION = "${topic}-offsets";
 
     /**
      * Creates a writer with a MongoDB client.
@@ -230,7 +231,7 @@ public class MongoDbWriter implements Closeable, Runnable {
                 Document doc = new Document();
                 doc.put("_id", id);
                 doc.put("offset", offset.getValue());
-                mongoHelper.store("OFFSETS", doc);
+                mongoHelper.store(OFFSET_COLLECTION, doc);
             }
         } catch (MongoException ex) {
             log.warn("Failed to store offsets to MongoDB", ex);
@@ -238,7 +239,7 @@ public class MongoDbWriter implements Closeable, Runnable {
     }
 
     private void retrieveOffsets() {
-        MongoIterable<Document> documentIterable = mongoHelper.getDocuments("OFFSETS");
+        MongoIterable<Document> documentIterable = mongoHelper.getDocuments(OFFSET_COLLECTION);
         try (MongoCursor<Document> documents = documentIterable.iterator()) {
             while (documents.hasNext()) {
                 Document doc = documents.next();
