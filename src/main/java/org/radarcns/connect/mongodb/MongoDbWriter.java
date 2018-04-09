@@ -58,7 +58,7 @@ public class MongoDbWriter implements Closeable, Runnable {
     private final RecordConverterFactory converterFactory;
     private final Monitor monitor;
     private Throwable exception;
-    public static final String OFFSET_COLLECTION = "{$topic}-offsets";
+    public static final String OFFSET_COLLECTION = "offsets";
 
     /**
      * Creates a writer with a MongoDB client.
